@@ -1,0 +1,123 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Clase1-computacion grafica </title>
+<style>
+	html,body{margin:5;padding:0; overflow: hidden;}
+	</style>
+</head>
+
+<body>
+	<script src="js/three.js"></script>        <!--llamando el documento raiz-->
+	<script src = js/OrbitContorls.js ></script>
+	
+	<script>
+        
+        // -------------------------- Cofiguracion de variables --------------------------
+        var camera1, camera2, camara3;
+		var scene= new THREE.Scene();                                         //Escena #1
+		var aspect = window.innerWidth/window.innerHeight;                    // Aspecto = Relacion de pixel en la pantalla
+        var renderer =new THREE.WebGLRenderer();
+		renderer.setSize(window.innerWidth, window.innerHeight);              // Ajusta el tamaño del lienzo
+        document.body.appendChild(renderer.domElement);
+        
+        
+		//var camera = new THREE.PerspectiveCamera( 100, aspect, 0.1, 1000);  // Camara original
+        
+        //-------------------------- Camara izquierda --------------------------
+        // Posicion, angulacion
+        camera1 = new THREE.PerspectiveCamera (45, aspect , 1, 1000);
+        camera1.position.z = 50;
+        camera1.lookAt (new THREE.Vector3(0,0,0));
+
+        //-------------------------- Camara central --------------------------
+        // Posicion, angulacion
+        camera2 = new THREE.OrthographicCamera (-110,110,110,-110, 10, 2000);
+        camera2.position.set (0,450,0);
+        camera2.up.set (0,-1,0);
+        camera2.lookAt (new THREE.Vector3(0,0,0));
+        
+        //-------------------------- Camara derecha --------------------------
+        // Posicion, angulacion
+        camera3 = new THREE.PerspectiveCamera (50, aspect , 1, 1000);
+        camera3.position.x = 150;
+        camera3.lookAt (new THREE.Vector3(0,0,0));
+		
+        //-------------------------- configuracion de las propiedades del objeto generado --------------------------
+		var geometry =new THREE .BoxGeometry(10,10,10);   // Funcion de caja, se puede cambiar por otras cosas
+		var material =new THREE .MeshLambertMaterial({color:0x888888});
+		var cube = new THREE.Mesh(geometry,material);
+        scene.add(cube);
+        
+        var geometryx =new THREE .BoxGeometry(1000,2,2);   // Funcion de caja, se puede cambiar por otras cosas
+		var materialx =new THREE .MeshLambertMaterial({color:0xff0000});
+		var cubex = new THREE.Mesh(geometry,material);
+        scene.add(cubex);
+        
+        var geometryy =new THREE .BoxGeometry(2,1000,2);   // Funcion de caja, se puede cambiar por otras cosas
+		var materialy =new THREE .MeshLambertMaterial({color:0x00ff00});
+		var cubey = new THREE.Mesh(geometry,material);
+        scene.add(cubey);
+        
+        var geometryz =new THREE .BoxGeometry(2,2,1000);   // Funcion de caja, se puede cambiar por otras cosas
+		var materialz =new THREE .MeshLambertMaterial({color:0x0000ff});
+		var cubez = new THREE.Mesh(geometry,material);
+        scene.add(cubez);
+        
+        
+        // -------------------------- Luces --------------------------
+        var pointLight = new THREE.PointLight (0xffffff);
+        pointLight.position.set (0,300,200);
+        scene.add (pointLight);
+        
+        var ambientLight = new THREE.AmbientLight (0x111111);
+        scene.add(ambientLight);
+		
+		// -------------------------- Definicion de camaras --------------------------
+		function render(){
+         	requestAnimationFrame (render);
+            
+            var ancho_pantalla, alto_pantalla;
+            ancho_pantalla = window.innerWidth;
+            alto_pantalla = window.innerHeight;
+            
+            var left, bottom, ancho, alto;
+            
+            // -------------------------- Se ajustan los limites de la vista --------------------------
+
+            
+            left =0  ; bottom =0; ancho = ancho_pantalla/3; alto = alto_pantalla;
+            renderer.setViewport (left, bottom, ancho, alto);
+            renderer.setScissor(left,bottom, ancho, alto);
+            renderer.enableScissorTest (true);
+            camera1.aspect = ancho / alto;
+            camera1.updateProjectionMatrix();
+            renderer.render(scene,camera1);
+            
+            left = ancho_pantalla/3; bottom = 0; ancho = ancho_pantalla/3; alto = alto_pantalla;
+            renderer.setViewport (left, bottom, ancho, alto);
+            renderer.setScissor(left, bottom, ancho, alto);
+            renderer.enableScissorTest (true);  // clip out "viewport"
+            camera2.aspect = ancho / alto;
+            camera2.updateProjectionMatrix();
+            renderer.render(scene,camera2);
+            
+            left = 2*ancho_pantalla/3; bottom = 0; ancho = ancho_pantalla/3; alto = alto_pantalla;
+            renderer.setViewport (left, bottom, ancho, alto);
+            renderer.setScissor(left, bottom, ancho, alto);
+            renderer.enableScissorTest (true);  // clip out "viewport"
+            camera3.aspect = ancho / alto;
+            camera3.updateProjectionMatrix();
+            renderer.render(scene,camera3);
+            
+            // -------------------------- Controles de rotacion --------------------------
+			 cube.rotation.x += 0.01;
+			cube.rotation.y +=0.01;
+            cube.rotation.z +=0.01;	
+            
+		}
+		render();
+	</script>
+</body>
+</html>
